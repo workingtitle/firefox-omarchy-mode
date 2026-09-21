@@ -262,10 +262,12 @@ CSS
     flush)
       cat <<'CSS'
 
-/* Flush tabs: no space above, below or between tabs in the horizontal tab strip */
+/* Flush tabs: no space above, below or between tabs in the horizontal tab
+   strip, with 5px more room inside each tab than Firefox's 8px */
 #TabsToolbar, #TabsToolbar * {
   --tab-margin-block: 0px !important;
   --tab-overflow-clip-margin: 0px !important;
+  --tab-inline-padding: 13px !important;
 }
 CSS
       ;;

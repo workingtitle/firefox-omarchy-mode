@@ -48,7 +48,7 @@ and the values are stored in `~/.config/omarchy/shell.json`.
 | `colors`            | `true`  | Use the Omarchy theme colors in the browser UI           |
 | `squareCorners`     | `true`  | Square corners on tabs, address bar, buttons and menus   |
 | `hideWindowButtons` | `true`  | Hide the close (and minimize/maximize) button in the tab strip |
-| `tabSpacing`        | `flush` | `flush`: no space around tabs; `compact`: 1px above and below; `default`: Firefox's spacing |
+| `tabSpacing`        | `flush` | `flush`: no space around tabs, a little more room inside; `compact`: 1px above and below; `default`: Firefox's spacing |
 
 ## What it changes
 
