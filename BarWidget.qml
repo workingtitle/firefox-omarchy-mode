@@ -24,7 +24,10 @@ Panel {
   readonly property bool colors: setting("colors", true) === true
   readonly property bool squareCorners: setting("squareCorners", true) === true
   readonly property bool hideWindowButtons: setting("hideWindowButtons", true) === true
-  readonly property bool compactTabs: setting("compactTabs", true) === true
+  readonly property string tabSpacing: {
+    var value = setting("tabSpacing", setting("compactTabs", true) === false ? "default" : "flush")
+    return ["flush", "compact", "default"].indexOf(value) >= 0 ? value : "flush"
+  }
   readonly property bool modeEnabled: status.enabled === true
   readonly property bool modeActive: status.active === true
   readonly property var profiles: status.profiles instanceof Array ? status.profiles : []
@@ -56,7 +59,7 @@ Panel {
   function optionArgs() {
     return ["--colors", colors ? "on" : "off", "--corners", squareCorners ? "square" : "rounded",
       "--window-buttons", hideWindowButtons ? "hide" : "show",
-      "--tabs", compactTabs ? "compact" : "default"]
+      "--tabs", tabSpacing]
   }
 
   // One helper at a time; a click during a background sync runs right after it.
@@ -80,6 +83,7 @@ Panel {
     var next = ({})
     for (var k in settings) next[k] = settings[k]
     next[key] = value
+    delete next.compactTabs
     var host = bar && bar.shell ? bar.shell : null
     if (host && typeof host.updateEntryInline === "function" && host.updateEntryInline(moduleName, next) !== false)
       message = ""
@@ -100,7 +104,7 @@ Panel {
   onColorsChanged: syncDebounce.restart()
   onSquareCornersChanged: syncDebounce.restart()
   onHideWindowButtonsChanged: syncDebounce.restart()
-  onCompactTabsChanged: syncDebounce.restart()
+  onTabSpacingChanged: syncDebounce.restart()
   Component.onCompleted: sync()
 
   // A theme switch retints the shell, so any of these changing is the cue to
@@ -210,8 +214,7 @@ Panel {
         model: [
           { key: "colors", label: "Use Omarchy theme colors", checked: root.colors },
           { key: "squareCorners", label: "Square corners", checked: root.squareCorners },
-          { key: "hideWindowButtons", label: "Hide close button", checked: root.hideWindowButtons },
-          { key: "compactTabs", label: "Compact tabs", checked: root.compactTabs }
+          { key: "hideWindowButtons", label: "Hide close button", checked: root.hideWindowButtons }
         ]
         delegate: Row {
           required property var modelData
@@ -234,6 +237,29 @@ Panel {
             accent: root.accent
             onToggled: root.saveOption(modelData.key, !modelData.checked)
           }
+        }
+      }
+
+      Column {
+        width: parent.width
+        spacing: Style.space(6)
+        Text {
+          text: "Tab spacing"
+          color: root.foreground
+          font.family: root.fontFamily
+          font.pixelSize: Style.font.body
+        }
+        ButtonGroup {
+          options: [
+            { value: "flush", label: "Flush" },
+            { value: "compact", label: "Compact" },
+            { value: "default", label: "Firefox default" }
+          ]
+          value: root.tabSpacing
+          foreground: root.foreground
+          accent: root.accent
+          fontFamily: root.fontFamily
+          onChanged: function(value) { root.saveOption("tabSpacing", value) }
         }
       }
 

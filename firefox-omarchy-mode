@@ -8,7 +8,7 @@
 #   firefox-omarchy-mode disable                 undo everything, print status
 #
 # Options: --colors on|off  --corners square|rounded  --window-buttons show|hide
-#          --tabs compact|default
+#          --tabs flush|compact|default
 #
 # Every file this script touches carries the "omarchy-firefox-mode" marker, so
 # disable removes exactly what enable added and leaves the rest of a user's
@@ -36,7 +36,7 @@ LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/$MARK.lock"
 COLORS=on
 CORNERS=square
 WINDOW_BUTTONS=hide
-TABS=compact
+TABS=flush
 
 die() { echo "firefox-omarchy-mode: $*" >&2; exit 2; }
 
@@ -66,7 +66,7 @@ parse_options() {
   [[ $COLORS == on || $COLORS == off ]] || die "--colors must be on or off"
   [[ $CORNERS == square || $CORNERS == rounded ]] || die "--corners must be square or rounded"
   [[ $WINDOW_BUTTONS == show || $WINDOW_BUTTONS == hide ]] || die "--window-buttons must be show or hide"
-  [[ $TABS == compact || $TABS == default ]] || die "--tabs must be compact or default"
+  [[ $TABS == flush || $TABS == compact || $TABS == default ]] || die "--tabs must be flush, compact or default"
 }
 
 save_options() {
@@ -249,14 +249,27 @@ CSS
 }
 
 render_tabs_css() {
-  [[ $TABS == compact ]] || return 0
-  cat <<'CSS'
+  case $TABS in
+    compact)
+      cat <<'CSS'
 
 /* Compact tabs: 1px above and below each tab in the horizontal tab strip */
 #TabsToolbar, #TabsToolbar * {
   --tab-margin-block: 1px !important;
 }
 CSS
+      ;;
+    flush)
+      cat <<'CSS'
+
+/* Flush tabs: no space above, below or between tabs in the horizontal tab strip */
+#TabsToolbar, #TabsToolbar * {
+  --tab-margin-block: 0px !important;
+  --tab-overflow-clip-margin: 0px !important;
+}
+CSS
+      ;;
+  esac
 }
 
 # Replace file $1 with stdin only when the content differs; returns 0 on a change.
@@ -355,7 +368,7 @@ status() {
       colors: ($colors == "on"),
       squareCorners: ($corners == "square"),
       hideWindowButtons: ($buttons == "hide"),
-      compactTabs: ($tabs == "compact"),
+      tabSpacing: $tabs,
       firefoxRunning: $running,
       restartNeeded: $restart,
       profiles: .,
@@ -400,6 +413,6 @@ case $command in
     status
     ;;
   *)
-    die "usage: firefox-omarchy-mode status|sync|enable|disable [--colors on|off] [--corners square|rounded] [--window-buttons show|hide] [--tabs compact|default]"
+    die "usage: firefox-omarchy-mode status|sync|enable|disable [--colors on|off] [--corners square|rounded] [--window-buttons show|hide] [--tabs flush|compact|default]"
     ;;
 esac

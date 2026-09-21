@@ -22,7 +22,7 @@
       "colors": true,
       "squareCorners": true,
       "hideWindowButtons": true,
-      "compactTabs": true
+      "tabSpacing": "flush"
     },
     "schema": [
       {
@@ -44,10 +44,16 @@
         "defaultValue": true
       },
       {
-        "key": "compactTabs",
-        "type": "boolean",
-        "label": "Compact tabs (1px spacing above and below)",
-        "defaultValue": true
+        "key": "tabSpacing",
+        "type": "enum",
+        "label": "Tab spacing",
+        "description": "flush: no space around tabs; compact: 1px above and below; default: Firefox's own spacing.",
+        "defaultValue": "flush",
+        "options": [
+          "flush",
+          "compact",
+          "default"
+        ]
       }
     ]
   }

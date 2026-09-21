@@ -9,7 +9,7 @@ whenever you switch themes.
 - **Theme colors** from the current theme's `colors.toml`, in light and dark themes
 - **Square corners** on tabs, address bar, buttons, menus and panels
 - **No close button** in the tab strip. You close windows with your Hyprland keybinding.
-- **Compact tabs** with only 1px of space above and below each tab
+- **Flush tabs** with no space around them, or compact tabs with 1px
 
 Every feature can be switched off on its own.
 
@@ -48,7 +48,7 @@ and the values are stored in `~/.config/omarchy/shell.json`.
 | `colors`            | `true`  | Use the Omarchy theme colors in the browser UI           |
 | `squareCorners`     | `true`  | Square corners on tabs, address bar, buttons and menus   |
 | `hideWindowButtons` | `true`  | Hide the close (and minimize/maximize) button in the tab strip |
-| `compactTabs`       | `true`  | Only 1px of space above and below each tab               |
+| `tabSpacing`        | `flush` | `flush`: no space around tabs; `compact`: 1px above and below; `default`: Firefox's spacing |
 
 ## What it changes
 
@@ -101,7 +101,7 @@ firefox-omarchy-mode disable    # remove everything again
 
 # enable and sync accept:
 #   --colors on|off  --corners square|rounded
-#   --window-buttons show|hide  --tabs compact|default
+#   --window-buttons show|hide  --tabs flush|compact|default
 ```
 
 Options you pass are remembered for later runs without options. While the bar
