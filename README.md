@@ -62,7 +62,7 @@ Firefox), the plugin writes three files:
 | `user.js`                  | Enables `toolkit.legacyUserProfileCustomizations.stylesheets` |
 
 Every line the plugin adds carries the marker `omarchy-firefox-mode`, so it can
-remove exactly what it added. The plugin never uses the network or `sudo`, and
+remove exactly what it added. The plugin never uses the network or root privileges, and
 it only writes to your Firefox profiles and `~/.local/state/omarchy-firefox-mode/`.
 
 ## Turning it off and uninstalling
