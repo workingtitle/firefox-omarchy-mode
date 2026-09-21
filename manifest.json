@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.workingtitle.firefox-omarchy-mode",
+  "name": "Firefox Omarchy Mode",
+  "version": "1.0.0",
+  "author": "workingtitle",
+  "license": "MIT",
+  "description": "Keeps Firefox's tabs, toolbar and menus in sync with your Omarchy theme, with optional square corners. The bar icon only shows while Firefox is not in Omarchy mode.",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml"
+  },
+  "barWidget": {
+    "displayName": "Firefox Omarchy Mode",
+    "description": "Themes Firefox with the active Omarchy theme; hidden while Firefox is already in Omarchy mode",
+    "category": "Appearance",
+    "allowMultiple": false,
+    "defaultSection": "right",
+    "defaults": {
+      "colors": true,
+      "squareCorners": true,
+      "hideWindowButtons": true,
+      "compactTabs": true
+    },
+    "schema": [
+      {
+        "key": "colors",
+        "type": "boolean",
+        "label": "Use Omarchy theme colors",
+        "defaultValue": true
+      },
+      {
+        "key": "squareCorners",
+        "type": "boolean",
+        "label": "Square corners on tabs, address bar, buttons and menus",
+        "defaultValue": true
+      },
+      {
+        "key": "hideWindowButtons",
+        "type": "boolean",
+        "label": "Hide Firefox's close button in the tab strip",
+        "defaultValue": true
+      },
+      {
+        "key": "compactTabs",
+        "type": "boolean",
+        "label": "Compact tabs (1px spacing above and below)",
+        "defaultValue": true
+      }
+    ]
+  }
+}
