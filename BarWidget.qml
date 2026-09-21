@@ -13,8 +13,6 @@ Panel {
   moduleName: "io.github.workingtitle.firefox-omarchy-mode"
   ipcTarget: "io.github.workingtitle.firefox-omarchy-mode"
 
-  property var shell: null
-
   property var status: ({})
   property bool loaded: false
   property bool busy: false
@@ -76,11 +74,16 @@ Panel {
 
   function sync() { run("sync") }
 
+  // The bar hands widgets their scoped shell facade on `bar.shell`, the same
+  // route the built-in clock and tailscale panels use to persist settings.
   function saveOption(key, value) {
     var next = ({})
     for (var k in settings) next[k] = settings[k]
     next[key] = value
-    if (!(shell && typeof shell.updateEntryInline === "function" && shell.updateEntryInline(moduleName, next)))
+    var host = bar && bar.shell ? bar.shell : null
+    if (host && typeof host.updateEntryInline === "function" && host.updateEntryInline(moduleName, next) !== false)
+      message = ""
+    else
       message = "Could not save the setting"
   }
 
