@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "io.github.workingtitle.firefox-omarchy-mode",
   "name": "Firefox Omarchy Mode",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "workingtitle",
   "license": "MIT",
   "description": "Keeps Firefox's tabs, toolbar and menus in sync with your Omarchy theme, with optional square corners. The bar icon only shows while Firefox is not in Omarchy mode.",

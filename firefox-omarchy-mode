@@ -31,7 +31,6 @@ STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/$MARK"
 ENABLED_FILE="$STATE_DIR/enabled"
 OPTIONS_FILE="$STATE_DIR/options"
 CHANGED_FILE="$STATE_DIR/last-change"
-LOCK_FILE="${XDG_RUNTIME_DIR:-/tmp}/$MARK.lock"
 
 COLORS=on
 CORNERS=square
@@ -39,6 +38,33 @@ WINDOW_BUTTONS=hide
 TABS=flush
 
 die() { echo "firefox-omarchy-mode: $*" >&2; exit 2; }
+
+# A directory only this user can write to, created if missing. Anything that
+# is a symlink, owned by somebody else, or readable by others is refused: a
+# lock file in a shared directory lets another local user point a predictable
+# path at a file of their choosing and have this script clobber it.
+private_dir() {
+  local dir=$1 owner mode
+  [[ -L $dir ]] && return 1
+  mkdir -p -m 700 "$dir" 2>/dev/null || return 1
+  [[ -d $dir && ! -L $dir ]] || return 1
+  chmod 700 "$dir" 2>/dev/null || return 1
+  read -r owner mode < <(stat -c '%u %a' "$dir" 2>/dev/null) || return 1
+  [[ $owner == "$(id -u)" && $mode == 700 ]]
+}
+
+# Prefer the per-user runtime directory, fall back to our own state directory,
+# and refuse to run rather than lock in a directory we do not control.
+lock_path() {
+  local dir
+  for dir in ${XDG_RUNTIME_DIR:+"$XDG_RUNTIME_DIR/$MARK"} "$STATE_DIR/lock"; do
+    if private_dir "$dir"; then
+      printf '%s\n' "$dir/lock"
+      return 0
+    fi
+  done
+  die "no private directory available for the lock file"
+}
 
 load_options() {
   [[ -f $OPTIONS_FILE ]] || return 0
@@ -70,7 +96,7 @@ parse_options() {
 }
 
 save_options() {
-  mkdir -p "$STATE_DIR"
+  mkdir -p -m 700 "$STATE_DIR"
   printf 'colors=%s\ncorners=%s\nwindow-buttons=%s\ntabs=%s\n' "$COLORS" "$CORNERS" "$WINDOW_BUTTONS" "$TABS" >"$OPTIONS_FILE"
 }
 
@@ -327,7 +353,7 @@ profile_installed() {
 }
 
 mark_changed() {
-  mkdir -p "$STATE_DIR"
+  mkdir -p -m 700 "$STATE_DIR"
   date +%s >"$CHANGED_FILE"
 }
 
@@ -381,7 +407,8 @@ status() {
 command=${1:-status}
 shift || true
 
-exec 9>"$LOCK_FILE"
+# Append, never truncate, and only inside a directory private_dir vouched for.
+exec 9>>"$(lock_path)"
 flock 9
 
 load_options
