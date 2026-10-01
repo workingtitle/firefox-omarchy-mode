@@ -208,6 +208,21 @@ CSS
   background-color: var(--omarchy-bg-dark) !important;
 }
 
+/* Let the toolbar show through the address field; keep suggestions opaque. */
+#urlbar:not([open]) > #urlbar-background,
+#urlbar:not([open]) > .urlbar-background {
+  background-color: transparent !important;
+}
+
+/* No persistent highlight on the vertical-tabs sidebar toggle. */
+@media -moz-pref("sidebar.verticalTabs") {
+  #sidebar-button:not(:hover):not(:active) > .toolbarbutton-icon,
+  #sidebar-button:not(:hover):not(:active) > .toolbarbutton-badge-stack,
+  #sidebar-button:not(:hover):not(:active) > .toolbarbutton-text {
+    background-color: transparent !important;
+  }
+}
+
 .tabbrowser-tab[selected] .tab-background {
   background-color: var(--omarchy-bg) !important;
   box-shadow: none !important;

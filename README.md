@@ -7,6 +7,8 @@ whenever you switch themes.
 ![Firefox in Omarchy mode](preview.png)
 
 - **Theme colors** from the current theme's `colors.toml`, in light and dark themes
+- **Transparent address field** when theme colors are enabled, with an opaque background for open suggestions
+- **Transparent vertical-tabs toggle** at rest when theme colors are enabled; hover and click feedback stay visible
 - **Square corners** on tabs, address bar, buttons, menus and panels
 - **No close button** in the tab strip. You close windows with your Hyprland keybinding.
 - **Flush tabs** with no space around them, or compact tabs with 1px
